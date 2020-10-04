@@ -1,0 +1,85 @@
+#include <iostream>
+using namespace std;
+
+int size;
+int t=0;
+
+class process 
+{
+
+public:
+    string name;
+    int tt;         //turnaround time
+    int bt;         //burst time
+    int wt;         //waiting time
+
+};
+
+template <class t>
+void swapp(t &t1, t &t2) //t1 is the smaller item from the bubble sort comparison
+{
+    t temp = t1;
+    t1 = t2;
+    t2 = temp;
+}
+
+void sort_by_bt(process p[])
+{
+    for(int i=0; i<size-1; i++)
+        for(int j=0; j<size-i-1; j++)
+            if(p[j].bt > p[j+1].bt) 
+            { 
+                //Bubble Sort
+                
+                int temp = p[j+1].bt;
+                p[j+1].bt = p[j].bt;
+                p[j].bt = temp;
+                swapp<int>(p[j].wt, p[j+1].wt);
+                swapp<string>(p[j].name, p[j+1].name);
+            }
+}
+
+int main() 
+{
+    process p[10];
+    cout<<"\nEnter size (<=10): ";
+    cin>>size;
+    for(int i=0; i<size; i++)
+    {
+        cout<<"\nProcess Name: ";
+        cin>>p[i].name;
+        cout<<"\nBurst time of process (ms): ";
+        cin>>p[i].bt;
+    }
+    sort_by_bt(p);        //sort the input by burst time.
+
+    float total_wt = 0;       //total waiting time
+    float avg_wt = 0;         //average waiting time
+    float total_tt = 0;       //total turnaround time
+    float avg_tt = 0;         //average turnaround time
+
+    //calculating waiting time for each process.
+    p[0].wt = 0; p[0].tt = 0;
+
+    for(int i=1; i<size; i++)
+    {
+        p[i].wt =0;
+        p[i].wt = p[i-1].wt + p[i-1].bt;
+        total_wt += p[i].wt;
+        p[i].tt = p[i].bt + p[i].wt;
+        total_tt += p[i].tt; 
+    }
+
+    avg_wt = total_wt/size;
+    avg_tt = total_tt/size;
+    
+    for(int i=0; i<size; i++)
+    {
+        cout<<"\nName: "<<p[i].name<<"; "<<"Burst Time: "<<p[i].bt<<"; Waiting Time: "<<p[i].wt<<"; Turnaround Time: "<<p[i].tt;
+    }
+
+    cout<<"\n\nAverage Wait Time: "<<avg_wt;
+    cout<<"\nAverage Turnaround Time: "<<avg_tt;
+
+    return 0;
+}
