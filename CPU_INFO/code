@@ -1,0 +1,15 @@
+
+
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+  int a;
+  printf("Kernel Version:\n");
+  system("cat /proc/sys/kernel/osrelease");
+  printf("CPU TYPE AND MODEL:\n");
+  system("cat /proc/cpuinfo|awk 'NR==4,NR==5 {print}'");
+  return 0;
+}
